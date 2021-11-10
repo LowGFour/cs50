@@ -9,7 +9,10 @@
 
     <ul>
         {% for entry in entries %}
-            <li>{{ entry }}</li>
+            <!--li>{{ entry }}</li-->
+            <li><a href="{% url 'wiki:entry' entry %}">{{ entry }}</a></li>
+        {% empty %}
+            <li>No entries yet! Why not create one?</li>
         {% endfor %}
     </ul>
 

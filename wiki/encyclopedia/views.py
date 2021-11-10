@@ -1,5 +1,4 @@
 from django.shortcuts import render
-
 from . import util
 
 
@@ -10,5 +9,6 @@ def index(request):
 
 def entry(request, title):
     return render(request, "encyclopedia/entry.html", {
-        "title": title
+        "title": title,
+        "entryBody": util.get_entry(title)
     })
