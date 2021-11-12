@@ -5,6 +5,7 @@
 {% endblock %}
 
 {% block body %}
-    <h1>ENTRY PAGE - temp heading</h1>
-    {{ entryBody }}
+
+    {{ entryBody | safe }}    <!-- need to use safe filter to avoid escaping the HTML -->
+
 {% endblock %}
