@@ -1,19 +1,53 @@
 from django.shortcuts import render
+from django.http.response import HttpResponseRedirect
+from django import forms
+from django.urls import reverse
 from . import util
-import markdown2
+
+class SearchForm(forms.Form):
+    q = forms.CharField()
 
 def index(request):
+    # if a list of entries exists in the session then this request is a redirect from search
+    if "entries" not in request.session:
+        entries = util.list_entries() # otherwise, get a list of all entries
     return render(request, "encyclopedia/index.html", {
-        "entries": util.list_entries()
+        "entries": entries
     })
 
 def entry(request, title):
-    md = util.get_entry(title) # retrieve markdown from entry file
-    if md is None:
+    html = util.md2html(title) 
+    if html is None:
         html = f"<h1>Error</h1><p>No entry has been found for the supplied title: {title}</p>"
-    else :
-        html = markdown2.markdown(md) # convert markdown text from file to html
     return render(request, "encyclopedia/entry.html", {
         "title": title,
         "entryBody": html
     })
+
+def search(request):
+    q = None # init q for function scope
+    if request.method == "POST":
+        form = SearchForm(request.POST)
+        if form.is_valid():
+            # retrieve the search string from the form
+            q = form.cleaned_data['q']
+
+        if q is not None:
+            # check for an entry matching the search string
+            html = util.md2html(q)
+            if html is None:
+                # no perfect match so find any matching entries, go home
+                # request.session["entries"] = util.search_entries(q)
+                return render(request, "encyclopedia/index.html", {
+                    "entries": util.search_entries(q)
+                })
+            else:
+                # perfect match so display entry
+                return render(request, "encyclopedia/entry.html", {
+                    "title": q,
+                    "entryBody": html
+                })
+        else:
+            # q is none; form was submitted without a value, inadvertent submit, just go home
+            return render(request, "encyclopedia/index.html", {})
+
