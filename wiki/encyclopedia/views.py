@@ -51,3 +51,4 @@ def search(request):
             # q is none; form was submitted without a value, inadvertent submit, just go home
             return render(request, "encyclopedia/index.html", {})
 
+# test change
