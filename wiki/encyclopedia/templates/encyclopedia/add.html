@@ -1,0 +1,23 @@
+{% extends "encyclopedia/layout.html" %}
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+{% block body %}
+
+    <div class="row">
+        <div class="col-lg-10 col-md-6">
+            <h2>Add New Entry</h2>
+            <form action="{% url 'wiki:add' %}" method="POST">
+                {% csrf_token %}
+                <input class="titleInput" type="text" name="title" placeholder="Title for new entry"/>
+                <textarea name="entryBody" placeholder="Enter markdown text for new entry"></textarea>
+                <div>
+                    <input type="submit" value="Create new entry" name="AddNew"/>
+                </div>
+            </form>
+        </div>
+    </div>
+
+{% endblock %}

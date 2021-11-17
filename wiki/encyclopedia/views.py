@@ -7,7 +7,13 @@ from . import util
 class SearchForm(forms.Form):
     q = forms.CharField()
 
+class AddNewEntryForm(forms.Form):
+    title=forms.CharField()
+    entryBody=forms.Textarea()
+
 def index(request):
+    if "entries" not in request.session:
+        request.session["entries"] = []
     return render(request, "encyclopedia/index.html", {
         "entries": util.list_entries() 
     })
@@ -48,4 +54,15 @@ def search(request):
             # q is none; form was submitted without a value, inadvertent submit, just go home
             return render(request, "encyclopedia/index.html", {})
 
-# test change
+def add(request):
+    # process user input if user has added a new entry
+    if request.method == "POST":
+        form = AddNewEntryForm(request.POST)
+        if form.is_valid():
+            title = form.cleaned_data["task"]
+            entryBody = form.cleaned_data["entryBody"]
+
+    # route if request method is GET (User has clicked the sidebar link).
+    return render(request, "encyclopedia/add.html", {
+        "form": AddNewEntryForm()
+    })
