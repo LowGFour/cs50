@@ -8,11 +8,8 @@ class SearchForm(forms.Form):
     q = forms.CharField()
 
 def index(request):
-    # if a list of entries exists in the session then this request is a redirect from search
-    if "entries" not in request.session:
-        entries = util.list_entries() # otherwise, get a list of all entries
     return render(request, "encyclopedia/index.html", {
-        "entries": entries
+        "entries": util.list_entries() 
     })
 
 def entry(request, title):
