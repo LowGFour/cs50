@@ -19,11 +19,9 @@ def search_entries(searchstr):
     Returns a list of all names of encyclopedia entries that contain
     the search parameter value. 
     """
-    _, entries = list_entries()
-    for entry in entries:
-        if searchstr not in entry:
-            entries.remove(entry)
-    return entries
+    _, filenames = default_storage.listdir("entries")
+    return list(sorted(re.sub(r"\.md$", "", filename)
+        for filename in filenames if filename.endswith(".md") and searchstr in filename))
 
 
 def save_entry(title, content):
