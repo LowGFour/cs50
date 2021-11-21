@@ -6,18 +6,53 @@
 
 {% block body %}
 
-    <div class="row">
-        <div class="col-lg-10 col-md-6">
-            <h2>Add New Entry</h2>
-            <form action="{% url 'wiki:add' %}" method="POST">
-                {% csrf_token %}
-                <input class="titleInput" type="text" name="title" placeholder="Title for new entry"/>
-                <textarea name="entryBody" placeholder="Enter markdown text for new entry"></textarea>
-                <div>
-                    <input type="submit" value="Create new entry" name="AddNew"/>
+    <div>
+        <h2>Add New Entry</h2>
+        <form action="{% url 'wiki:add' %}" method="POST">
+            {% csrf_token %}
+
+            <!-- Field errors -->
+            {% if form.errors %}
+            <div class="row">
+            {% for field_with_error,error_messages in form.errors.items %}
+                <div class="alert alert-danger">{{error_messages}}</div>
+            {% endfor %}
+            </div>
+            {% endif %}
+            
+            {% for field in form %}
+                <div class="row">
+                    <div class="col-md-2">    
+                        {{ field.label_tag }}
+                        {% if field.help_text %}
+                        <sup>{{ field.help_text }}</sup>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-10 pull-left">
+                        {{ field }}
+                    </div>
                 </div>
-            </form>
-        </div>
+            {% endfor %}
+            <!--input class="titleInput" type="text" name="title" placeholder="Title for new entry" value="{{ form.title }}"/>
+            {% for error in form.errors.title %}
+                <div class="alert alert-danger">
+                    <strong>Title: {{ error }}</strong>
+                </div>
+            {% endfor %}
+            <textarea name="entryBody" placeholder="Enter markdown text for new entry">{{ form.entryBody }}</textarea>
+            {% for error in form.errors.entryBody %}
+                <div class="alert alert-danger">
+                    <strong>Entry text: {{ error }}</strong>
+                </div>
+            {% endfor %}
+            
+            {{ form }}
+            -->
+
+            <div>
+                <input type="submit" value="Create new entry" name="AddNew"/>
+            </div>
+        </form>
     </div>
 
 {% endblock %}

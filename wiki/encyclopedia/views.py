@@ -2,14 +2,12 @@ from django.shortcuts import render
 from django.http.response import HttpResponseRedirect
 from django import forms
 from django.urls import reverse
+import logging
 from . import util
+from .forms import AddEntryForm
+from .forms import SearchForm
 
-class SearchForm(forms.Form):
-    q = forms.CharField()
-
-class AddNewEntryForm(forms.Form):
-    title=forms.CharField()
-    entryBody=forms.Textarea()
+log = logging.getLogger(__name__)
 
 def index(request):
     if "entries" not in request.session:
@@ -57,12 +55,25 @@ def search(request):
 def add(request):
     # process user input if user has added a new entry
     if request.method == "POST":
-        form = AddNewEntryForm(request.POST)
+        log.info("Processing a new entry form.")
+        form = AddEntryForm(request.POST)
+        
         if form.is_valid():
-            title = form.cleaned_data["task"]
+            log.info("New entry form is valid.")
+            title = form.cleaned_data["title"]
             entryBody = form.cleaned_data["entryBody"]
+            util.save_entry(title, entryBody)
+            return render(request, "encyclopedia/entry.html", {
+                "title": title,
+                "entryBody": util.md2html(title)
+            })
 
+        else:
+            # An entry already exists for this title or input is invalid so display an error message
+            log.info("New entry form is not valid.")
+            
+            return render(request, "encyclopedia/add.html", {"form": form})
+            
     # route if request method is GET (User has clicked the sidebar link).
-    return render(request, "encyclopedia/add.html", {
-        "form": AddNewEntryForm()
-    })
+    log.info("User has requested a blank add entry form.")
+    return render(request, "encyclopedia/add.html", {"form": AddEntryForm()})
