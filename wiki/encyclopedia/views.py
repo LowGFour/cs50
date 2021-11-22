@@ -77,3 +77,13 @@ def add(request):
     # route if request method is GET (User has clicked the sidebar link).
     log.info("User has requested a blank add entry form.")
     return render(request, "encyclopedia/add.html", {"form": AddEntryForm()})
+
+def edit(request, title):
+    if request.method == "POST":
+        log.info(f"User has submitted modified markdown for {title}.")
+
+    else :
+        log.info(f"User has clicked the edit link for {title}.")
+        return render(request, "encyclopedia/edit.html", {
+            "title": title,
+        })
