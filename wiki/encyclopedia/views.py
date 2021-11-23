@@ -25,6 +25,20 @@ def entry(request, title):
         "entryBody": html
     })
 
+def edit(request, title):
+    request.session["title"] = title
+    log.info(f"User has opened { request.session['title'] } for editing.")
+    return render(request, "encyclopedia/edit.html", {
+        "title": request.session["title"],
+        "entryBody": util.md2html(title) 
+    })
+
+
+def save(request):
+    if request.method == "POST":
+        log.info(f"User has submitted modified markdown for { request.session['title'] }.")
+
+
 def search(request):
     q = None # init q for function scope
     if request.method == "POST":
@@ -71,19 +85,9 @@ def add(request):
         else:
             # An entry already exists for this title or input is invalid so display an error message
             log.info("New entry form is not valid.")
-            
             return render(request, "encyclopedia/add.html", {"form": form})
             
     # route if request method is GET (User has clicked the sidebar link).
     log.info("User has requested a blank add entry form.")
     return render(request, "encyclopedia/add.html", {"form": AddEntryForm()})
 
-def edit(request, title):
-    if request.method == "POST":
-        log.info(f"User has submitted modified markdown for {title}.")
-
-    else :
-        log.info(f"User has clicked the edit link for {title}.")
-        return render(request, "encyclopedia/edit.html", {
-            "title": title,
-        })

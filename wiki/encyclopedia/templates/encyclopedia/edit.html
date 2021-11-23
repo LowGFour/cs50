@@ -8,14 +8,17 @@
 
     <div>
         <h2>Edit Entry</h2>
-        <!--form action="{% url 'wiki:edit' request.title %}" method="POST">
+        
+        {% comment %}
+        <form action="{% url 'wiki:save' %}" method="POST">
             {% csrf_token %}
 
 
             <div>
-                <input type="submit" value="Edit entry" name="Edit"/>
+                <input type="submit" value="Save entry" name="Save"/>
             </div>
-        </form-->
+        </form>
+        {% endcomment %}
     </div>
 
 {% endblock %}
