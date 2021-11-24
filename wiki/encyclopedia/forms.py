@@ -10,7 +10,7 @@ class SearchForm(forms.Form):
     q = forms.CharField()
 
 class AddEntryForm(forms.Form):
-    title=forms.CharField(label='Entry Title', max_length=20, required=True)
+    title=forms.CharField(label='Entry Title', max_length=20, required=True, widget=forms.TextInput(attrs={'autofocus': 'autofocus'}))
     entryBody=forms.CharField(label='Entry Markdown',max_length=2000, required=True, widget=forms.Textarea)
     
     # validator to check if an entry already exists for supplied title
@@ -23,3 +23,6 @@ class AddEntryForm(forms.Form):
                 params={'existingTitle': clnTitle}
             )
         return clnTitle
+
+class EditEntryForm(forms.Form):
+    entryBody=forms.CharField(label='Entry Markdown',max_length=2000, required=True, widget=forms.Textarea(attrs={'autofocus': 'autofocus'}))

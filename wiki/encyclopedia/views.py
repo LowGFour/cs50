@@ -5,6 +5,7 @@ from django.urls import reverse
 import logging
 from . import util
 from .forms import AddEntryForm
+from .forms import EditEntryForm
 from .forms import SearchForm
 
 log = logging.getLogger(__name__)
@@ -27,17 +28,33 @@ def entry(request, title):
 
 def edit(request, title):
     request.session["title"] = title
-    log.info(f"User has opened { request.session['title'] } for editing.")
-    return render(request, "encyclopedia/edit.html", {
-        "title": request.session["title"],
-        "entryBody": util.md2html(title) 
-    })
-
-
-def save(request):
     if request.method == "POST":
-        log.info(f"User has submitted modified markdown for { request.session['title'] }.")
+        # save the new markdown for the entry and present to the user as HTML
+        log.info(f"User has submitted modified markdown for {title}.")
+        form = EditEntryForm(request.POST)
+        
+        if form.is_valid():
+            log.info("Edit entry form is valid.")
+            # textarea bug, use bytes to avoid converting Windows CR LF to CR CR LF
+            entryBody = bytes(form.cleaned_data["entryBody"],'utf8') 
+            util.save_entry(title, entryBody)
+            return HttpResponseRedirect(reverse('wiki:entry', args=(title,)))
+        
+        else:
+            log.info("Edit entry form is invalid, so going back to fix it.")
+            return render(request, "encyclopedia/edit.html", {
+                "title": title, 
+                "form": form
+            })
 
+    else :
+        # load edit form with entry markdown and present to the user for editing
+        log.info(f"User has opened { request.session['title'] } for editing.")
+        form = EditEntryForm(data={'entryBody': util.get_entry(title)})
+        return render(request, "encyclopedia/edit.html", {
+            "title": title, 
+            "form": form
+        })
 
 def search(request):
     q = None # init q for function scope

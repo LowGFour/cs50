@@ -7,18 +7,34 @@
 {% block body %}
 
     <div>
-        <h2>Edit Entry</h2>
+        <h2>Edit Entry: {{ title }}</h2>
         
-        {% comment %}
-        <form action="{% url 'wiki:save' %}" method="POST">
+        <form action="{% url 'wiki:edit' title %}" method="POST">
             {% csrf_token %}
 
+            <!-- Field errors -->
+            {% if form.errors %}
+                <div class="row">
+                    {% for field_with_error,error_messages in form.errors.items %}
+                        <div class="alert alert-danger">{{error_messages}}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            
+            <div class="row">
+                <div class="col-md-2">    
+                    {{ form.entryBody.label_tag }}
+                </div>
+                <div class="col-md-10 pull-left">
+                    {{ form.entryBody }}
+                </div>
+            </div>
 
             <div>
-                <input type="submit" value="Save entry" name="Save"/>
+                <input type="submit" value="Save" name="Save"/>
             </div>
         </form>
-        {% endcomment %}
+
     </div>
 
 {% endblock %}
