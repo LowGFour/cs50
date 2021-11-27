@@ -6,7 +6,7 @@
 
 {% block body %}
 
-    {{ entryBody | safe }}    <!-- need to use safe filter to avoid escaping the HTML -->
+    {{ entryBody | safe }}    
 
     <div>
         <a href="{% url 'wiki:edit' title %}">Edit</a-->

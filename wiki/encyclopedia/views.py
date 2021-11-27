@@ -3,6 +3,7 @@ from django.http.response import HttpResponseRedirect
 from django import forms
 from django.urls import reverse
 import logging
+import random
 from . import util
 from .forms import AddEntryForm
 from .forms import EditEntryForm
@@ -14,13 +15,28 @@ def index(request):
     if "entries" not in request.session:
         request.session["entries"] = []
     return render(request, "encyclopedia/index.html", {
-        "entries": util.list_entries() 
+        "entries": util.list_entries(),
+        
+    })
+
+def randomEntry(request):
+    randomChoice = random.choice(util.list_entries())
+    log.info(f"User has requested the page for {randomChoice}.")
+    html = util.md2html(randomChoice) 
+    if html is None:
+        html = f"<h1>Error</h1><p>No entry has been found for the supplied title: {randomEntry}</p>"
+
+    return render(request, "encyclopedia/entry.html", {
+        "title": randomChoice,
+        "entryBody": html
     })
 
 def entry(request, title):
+    log.info(f"User has requested the page for {title}.")
     html = util.md2html(title) 
     if html is None:
         html = f"<h1>Error</h1><p>No entry has been found for the supplied title: {title}</p>"
+    
     return render(request, "encyclopedia/entry.html", {
         "title": title,
         "entryBody": html
@@ -69,7 +85,6 @@ def search(request):
             html = util.md2html(q)
             if html is None:
                 # no perfect match so find any matching entries, go home
-                # request.session["entries"] = util.search_entries(q)
                 return render(request, "encyclopedia/index.html", {
                     "entries": util.search_entries(q)
                 })
@@ -94,6 +109,7 @@ def add(request):
             title = form.cleaned_data["title"]
             entryBody = form.cleaned_data["entryBody"]
             util.save_entry(title, entryBody)
+            
             return render(request, "encyclopedia/entry.html", {
                 "title": title,
                 "entryBody": util.md2html(title)
