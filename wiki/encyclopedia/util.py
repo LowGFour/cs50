@@ -2,7 +2,8 @@ import re
 
 from django.core.files.base import ContentFile
 from django.core.files.storage import default_storage
-import markdown2
+#import markdown2 # Full Markdown module
+from . import mdsimple as markdown2 # import custom mdsimple as markdown2
 
 def list_entries():
     """
