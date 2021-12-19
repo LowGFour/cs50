@@ -34,8 +34,8 @@ patterns = {
     "strong": MarkdownPattern("strong", re.compile(r"\*{2}(?P<strongtext>\S.*?)\*{2}"), "<strong>&1</strong>"),
 
     # links come in several flavours
-    "a1":    MarkdownPattern("a1", re.compile(r"\[(?P<linktext>.*)\]\((?P<href>.*) \"(?P<title>.*)\"\)"), "<a href='&2' title='&3'>&1</a>"), 
-    "a2":    MarkdownPattern("a2", re.compile(r"\[(?P<linktext>.*)\]\((?P<href>.*)\)"), "<a href='&2'>&1</a>"), 
+    "a1":    MarkdownPattern("a1", re.compile(r"\[(?P<linktext>.*?)\]\((?P<href>.*?) \"(?P<title>.*?)\"\)"), "<a href='&2' title='&3'>&1</a>"), 
+    "a2":    MarkdownPattern("a2", re.compile(r"\[(?P<linktext>.*?)\]\((?P<href>.*?)\)"), "<a href='&2'>&1</a>"), 
     
     # headings are processed in the reverse order h6 to h1 
     "h1":     MarkdownPattern("h1",     re.compile(r"\#{1}\s(?!\#)(?P<heading>.*)"), "<h1>&1</h1>"),
@@ -100,9 +100,13 @@ Proin bibendum, **lacus vitae congue mattis**, felis ** sapien ornare elit, eu p
 ### Pellentesque 
 volutpat odio mattis, http://nodeca.github.io/pica/demo/ ultricies erat eget, commodo ante. Aliquam nec tellus velit. Vestibulum consectetur aliquam augue, at bibendum quam porttitor varius. Here is a random \* to make sure I am taking care of escaped substrings.
 
+# Django
+
+Django is a web framework written using [Python](/wiki/Python) that allows for the design of web applications that generate [HTML](/wiki/HTML) dynamically.
+
 You can get your own copy of lorem ipsum text at [Lorem Ipsum](https://www.lipsum.com/).
 [Lorem Ipsum](https://www.lipsum.com/).
-[link text](http://dev.nodeca.com) 
+Here is a link [link text](/dev/nodeca) inside some text.
 [link with title](http://nodeca.github.io/pica/demo/ "title text!")
 """
 
