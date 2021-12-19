@@ -8,6 +8,6 @@ Proin bibendum, lacus vitae congue mattis, felis sapien ornare elit, eu porta di
 * item 2 
 * item 3
 
-Pellentesque volutpat odio mattis, ultricies erat eget, commodo ante. Aliquam nec tellus velit. Vestibulum consectetur aliquam augue, at bibendum quam porttitor varius. Here is a random \* to make sure I am taking care of escaped substrings.
+Pellentesque volutpat odio mattis, ultricies erat eget, commodo ante. Aliquam nec tellus velit. Vestibulum consectetur aliquam augue, at bibendum quam porttitor varius. 
 
 You can get your own copy of lorem ipsum text at [Lorem Ipsum](https://www.lipsum.com/).

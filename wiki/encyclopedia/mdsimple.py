@@ -65,19 +65,20 @@ def markdown(text):
         x = re.search(mdp.pattern, text) # priming search
         
         while x is not None:
-            
             # use regex to create the replacement string for this occurrence of the pattern
             replacement = mdp.replace
             i = 1
             while i <= len(x.groups()):
                 replacement = re.sub(re.compile(f"&{i}"), x.group(i), replacement, 1 )
                 i = i + 1
+            # end while i
 
             # replace the first matched occurence of the pattern with the replacement string
             text = re.sub(mdp.pattern, replacement, text, 1) # 1 indicates first occurrence
             x = re.search(mdp.pattern, text) # search again to find another occurrence           
-
+        # end while x
     return text   
+# end def markdown()
 
 # Some sample markdown text that is useful for testing this module. A main method is also supplied
 # to facilitate running this module from the command line for testing purposes.
